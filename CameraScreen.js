@@ -3,8 +3,9 @@ import { StyleSheet, View, Text, TouchableOpacity, Image, SafeAreaView, Button, 
 import { Camera } from 'expo-camera';
 import { shareAsync } from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
+import { useNavigation } from '@react-navigation/native';
 
-const CameraScreen = () => {
+const CameraScreen = ({navigation}) => {
 
   let cameraRef = useRef();
   const [hasCameraPermission, setHasCameraPermission] = useState();
@@ -37,6 +38,9 @@ const CameraScreen = () => {
 
     let newPhoto = await cameraRef.current.takePictureAsync(options);
     setPhoto(newPhoto);
+
+    // Pass the photo data to the ClientScreen
+    navigation.navigate('Client', { photo: newPhoto });
   };
 
   let sharePic = () => {

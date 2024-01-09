@@ -1,11 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, View, Button, Text, TextInput } from 'react-native';
 import { getDatabase, ref, set, push } from 'firebase/database';
 import { app, auth, db } from './firebaseConfig';  // Import the initialized Firebase app
+import { Route } from '@react-navigation/native';
 
-const ClientScreen = ({ navigation }) => {
+const ClientScreen = ({ navigation, route }) => {
   const [venue, setVenue] = useState('');
   const [numberOfSets, setNumberOfSets] = useState('');
+  const [myPhoto, setMyPhoto] = useState(null);
+
+  useEffect(() => {
+    // Check if photo data is received through navigation parameters
+    if (route.params && route.params.photo) {
+      setMyPhoto(route.params.photo);
+    }
+  }, [route.params]);
 
   const sendDataToFirebase = async () => {
     try {
@@ -19,6 +28,7 @@ const ClientScreen = ({ navigation }) => {
       const dataToSend = {
         venue: venue,
         numberOfSets: numberOfSets,
+        photo: myPhoto,
         // Add more key-value pairs as needed
       };
   
@@ -30,6 +40,7 @@ const ClientScreen = ({ navigation }) => {
       console.error('Error sending data to the database:', error.message);
     }
   };
+
 
   return (
     <View style={styles.container}>
